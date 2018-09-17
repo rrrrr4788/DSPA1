@@ -148,6 +148,7 @@ void list::searchTerms(string textToSearch) {
 		}
 		temp = temp->next;
 	}
+
 	if (notFound) {
 		cout << "Not Found." << endl;
 	}
