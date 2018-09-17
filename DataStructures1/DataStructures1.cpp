@@ -142,8 +142,7 @@ void list::searchTerms(string textToSearch) {
 	int size = this->getSize();
 	bool notFound = true;
 	for (int i = 0; i < size; i++) {
-		if (temp->name.find(textToSearch)) {
-			cout << temp->name.find(textToSearch) << endl;
+		if (temp->name.find(textToSearch)<1024) {
 			cout << i + 1 << ". " << temp->name << endl;
 			notFound = false;
 		}
@@ -163,7 +162,7 @@ void returnError2() {
 	cout << "Check your input. Note: the index must not exceed the list size and index must be larger than 0!" << endl;
 }
 
-int getNextNum(string input)
+int getNextNum(string input)//get the index of the input
 {
 	int number = 0;
 
