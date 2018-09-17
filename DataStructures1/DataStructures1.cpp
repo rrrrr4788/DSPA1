@@ -347,6 +347,6 @@ int main() {
 			//return error
 		}
 	}
-	system("pause");
+	//system("pause");
 	return 0;
 }
