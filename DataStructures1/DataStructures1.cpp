@@ -15,110 +15,53 @@ int list::getSize() {
 
 void list::firstNode(string textToInsert) {
 	node *temp = new node;
-
 	temp->name = textToInsert;
-
 	temp->next = head;
-
 	head = temp;
 }
 
 void list::insertEnd(string textToInsert) {//insert given text at the end of the document
-	/*if (head!=NULL) {//list is not empty
-		node *temp = head;
-		node *tempInsert = new node;
-		tempInsert->name = textToInsert;
-		while (temp->next != NULL) {
-			temp = temp->next;
-		}
-		temp->next = tempInsert;
-		cout << temp->next->name << endl;
-		node *temp = head;
-		int pos = 1;
-		while (temp->next != NULL) {
-			temp = temp->next;
-			pos++;
-		}
-		this->insert(textToInsert, pos);
-	}
-	else {//list is empty
-		node *temp = new node;
-		temp->name = textToInsert;
-		temp->next = head;
-		head = temp;*/
+	
 	if (head == NULL) {
 		this->firstNode(textToInsert);
 	}
 	else{
 		node *temp = head;
-		node *prev = new node;
-		prev->next = head;
-
-		/*while (temp != NULL) {
-			prev = temp;
-			temp = temp->next;
-			if (temp->next == NULL) {
-				break;
-			}
-		}*/
-		/*for (int i = 0; i < this->getSize(); i++) {
-			prev = temp;
-			if(temp->next!=nullptr)
-			temp = temp->next;
-		}*/
-		while (temp->next!=NULL)
+		while (temp->next!=NULL)//iterate to the last node in the list
 		{
 			temp = temp->next;
 		}
-		temp = temp->next;
-		node *temp3 = new node;
-		temp3 = temp;
+		node *temp3 = new node; 
+		temp3->next = NULL;
 		temp3->name = textToInsert;
+		temp->next = temp3;
 	}
 }
 void list::insert(string textToInsert, int indexNum) {//insert given text at the line indicated by index given
-	/*node *curr = head;
-	node *prev = new node;
-	node *tempInsert = new node;
-	tempInsert->name = textToInsert;
-	prev->next = curr;
-	int counter = 0;
-	while (counter < indexNum) {
-		counter++;
-		prev = curr;
-		curr = curr->next;
-	}
-	prev->next = tempInsert;
-	tempInsert->next = curr;*/
+
 	node* temp = head;
-	node* temp2 = head;
+	node* temp2 = new node;
+	temp2->next = NULL;
 	temp2->name = textToInsert;
-	int size = 0;
+	int size = getSize();
 
-	while (temp != NULL) {
-		temp = temp->next;
-		size++;
-	}
-	temp = head;
-
+	
 	if (indexNum > size) {
-		returnError();
+		returnError2();
+	}
+	else if (indexNum < 1) {
+		returnError2();
+	}
+	else if (indexNum == 1) {
+		temp2->next = head;
+		head = temp2;
 	}
 	else {
-		if (indexNum == 0) {
-			/*temp2->next = head;
-			head = temp2;
-			temp = head;
-			return temp;*/
-			this->insertEnd(textToInsert);
-		}
-		else {
-			for (int i = 0; i < indexNum - 1; i++) {
+			for (int i = 0; i < indexNum - 2; i++) {
 				temp = temp->next;
 			}
 			temp2->next = temp->next;
 			temp->next = temp2;
-		}
 	}
 }
 void list::deletion(int indexNum) {//delete line at index given
@@ -126,77 +69,63 @@ void list::deletion(int indexNum) {//delete line at index given
 	node* prev = new node;
 	curr = head;
 	prev->next = head;
-	int size = 0;
+	int size = this->getSize();
 
-	while (curr != NULL) {
-		curr = curr->next;
-		size++;
+	if (size < indexNum) {
+		returnError();
 	}
-	curr = head;
-
-	/*for (int i = 0; i < size; i++) {
-		if ((curr->name == indexNum) && (curr != head)) {
+	else {
+		for (int i = 0; i < indexNum - 1; i++) {
+			prev = curr;
 			curr = curr->next;
-			prev->next = curr;
 		}
-		else if ((curr->name == indexNum) && (curr == head)) {
-			head = curr->next;
+		if (curr != head) {
 			curr = curr->next;
 			prev->next = curr;
 		}
 		else {
-			prev = curr;
+			head = curr->next;
 			curr = curr->next;
+			prev->next = curr;
 		}
-	}*/
-	for (int i = 0; i < indexNum; i++) {
-		prev = curr;
-		curr = curr->next;
-	}
-	if (curr != head) {
-		curr = curr->next;
-		prev->next = curr;
-	}
-	else {
-		head = curr->next;
-		curr = curr->next;
-		prev->next = curr;
 	}
 }
 void list::edit(string textToEdit, int indexNum) {//replace the line at the index given with the given text
-	int counter = 0;
 	node *temp = head;
-	while (counter < indexNum) {
-		temp = temp->next;
-		counter++;
+	int size = this->getSize();
+	if (size < indexNum) {
+		returnError();
 	}
-	temp->name = textToEdit;
+	else {
+		for(int i = 0;i<indexNum-1;i++) {
+			temp = temp->next;
+		}
+		temp->name = textToEdit;
+	}
 }
 void list::print() {//print the entire document, with line numbers
 	node *temp = new node;
 	temp = head;
 	int counter = 1;
-	int max = this->getSize();
-	for (int i = 0; i< max;i++){
+	while (temp != NULL) {
 		cout << counter << ". " << temp->name << endl;
 		temp = temp->next;
 		counter++;
 	}
 }
 void list::search(int indexNum) {//print the line number and line that contains the given text.  print "not found" if it is not found
-	int counter = 0;//we get the size of linked list here first
+	int size = this->getSize();//we get the size of linked list here first
 	node* temp = head;
-	while (temp != NULL) {
-		counter++;
-		temp = temp->next;
-	}
 
-	if (counter < indexNum) {//if the index exceeds then print "not found"
+	if (size < indexNum) {//if the index exceeds then print "not found"
 		cout << "Not found." << endl;
+	}
+	else if (indexNum < 1) {
+		returnError();
 	}
 	else {
 		bool flag = true;
-		counter = 1;
+		int counter = 1;
 		while (temp != NULL) {
 			if (indexNum == counter) {
 				cout << counter << ". " << temp->name << endl;
@@ -209,12 +138,29 @@ void list::search(int indexNum) {//print the line number and line that contains 
 }
 
 void list::searchTerms(string textToSearch) {
-
+	node* temp = head;
+	int size = this->getSize();
+	bool notFound = true;
+	for (int i = 0; i < size; i++) {
+		if (temp->name.find(textToSearch)) {
+			cout << temp->name.find(textToSearch) << endl;
+			cout << i + 1 << ". " << temp->name << endl;
+			notFound = false;
+		}
+		temp = temp->next;
+	}
+	if (notFound) {
+		cout << "Not Found." << endl;
+	}
 }
 
 
 void returnError() {
 	cout << "Check your input." << endl;
+}
+
+void returnError2() {
+	cout << "Check your input. Note: the index must not exceed the list size and index must be larger than 0!" << endl;
 }
 
 int getNextNum(string input)
@@ -239,9 +185,11 @@ int getNextNum(string input)
 string getRest(string input, int size)
 {
 	string rest = "";
-
-	rest = input.substr(size + 1, input.length() - 1);
-
+	if (input.length() == size) {
+	}
+	else {
+		rest = input.substr(size + 1, input.length() - 1);
+	}
 	return rest;
 }
 
@@ -254,18 +202,14 @@ bool isNumber(string str) {
 	return true;
 }
 
-string truncateIt(string str, int choice) {
+string truncateIt(string str, int choice, int indexlength) {//get the text after the index num
 	string stuff = "";
 	int i = 0;
 
-	stuff = str.substr(choice, str.length()-choice);
-	while ((!isalpha(stuff.at(i)))&&(i<stuff.length())) {
+	stuff = str.substr(choice+2+indexlength, str.length()-choice-indexlength-1);
+	while (i<stuff.length()) {
 		i++;
 	}
-	cout << stuff << endl;
-	system("pause");
-	stuff = stuff.substr(i,str.length()-i-1);
-	cout << stuff << endl;
 	return stuff;
 }
 
@@ -284,7 +228,7 @@ int main() {
 		int i = 0;
 		
 		int lengthTextInput = textInput.length();
-		while (/*(textInput.at(i) != ' ')&&*/(i!= lengthTextInput)) {
+		while (i!= lengthTextInput) {
 			if (textInput.at(i) == ' ') {
 				break;
 			}
@@ -295,19 +239,30 @@ int main() {
 
 
 		if (choice == "insertEnd") {
-
-			text = getRest(textInput, lengthChoice);//get the text after the choice word
-			linkedlist.insertEnd(text);
+				text = getRest(textInput, lengthChoice);//get the text after the choice word
+				if (text == "") {
+					returnError();
+				}
+				else {
+					linkedlist.insertEnd(text);
+				}
 			//insert the whole text
 		}
 		else if (choice == "insert") {
 
 			text = getRest(textInput, lengthChoice);//get the text after the choice word
 			index = getNextNum(text);//get the index
+			int intlength = to_string(index).length();
 			
-			if (index != -1) {
-				text = truncateIt(textInput,lengthChoice);
-				linkedlist.insert(text, index);
+			if (index > 0) {
+				//text = truncateIt(textInput,lengthChoice);
+				if (text.length() == to_string(index).length()) {
+					returnError();
+				}
+				else {
+					text = truncateIt(textInput, lengthChoice, intlength);
+					linkedlist.insert(text, index);
+				}
 			}
 			else {
 				returnError();
@@ -316,12 +271,46 @@ int main() {
 		}
 		else if (choice == "delete") {
 			//store the next num and return error if there is anything else
+
+			text = getRest(textInput, lengthChoice);//get the text after the choice word
+			index = getNextNum(text);//get the index
+			if (index > 0) {
+				if (text.length() != to_string(index).length()) {//if there is anything other than the index
+					returnError();
+				}
+				else {
+					linkedlist.deletion(index);
+				}
+			}
+			else {
+				returnError();
+			}
 			//then delete selected text
 		}
 		else if (choice == "edit") {
 			//store the next num and the rest of the text
 			//then replace the designated text with the rest of the text
 			text = getRest(textInput, lengthChoice);//get the text after the choice word
+			index = getNextNum(text);//get the index
+			int intlength = to_string(index).length();
+
+
+
+			if (index > 0) {
+				if (text == "") {
+					returnError();
+				}
+				else if (text.length() == to_string(index).length()) {
+					returnError();
+				}
+				else {
+					text = truncateIt(textInput, lengthChoice, intlength);
+					linkedlist.edit(text, index);
+				}
+			}
+			else {
+				returnError();
+			}
 		}
 		else if (choice == "print") {
 			//return error if there is anything else
@@ -333,6 +322,18 @@ int main() {
 		else if (choice == "search") {
 			//store the next num or any text and return error if there is anything else
 			//FIXME: split the search function into 2 according to the next term (num or word). 
+
+			text = getRest(textInput, lengthChoice);//get the text after the choice word
+			index = getNextNum(text);//get the index
+			
+				if (text.length() != to_string(index).length()) {//if there is anything other than the index
+					linkedlist.searchTerms(text);
+				}
+				else {
+					linkedlist.search(index);//if there is only an index, then search by index
+				}
+			
+			//then delete selected text
 		}
 		else if (choice == "quit") {
 			if (lengthChoice!=lengthTextInput)

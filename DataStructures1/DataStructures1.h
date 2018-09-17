@@ -5,10 +5,11 @@
 using namespace std;
 
 void returnError();
+void returnError2();
 int getNextNum(string input);
 string getRest(string input, int size);
 bool isNumber(string str);
-string truncateIt(string str, int choice);
+string truncateIt(string str, int choice, int indexlength);
 
 struct node {
 	string name;
