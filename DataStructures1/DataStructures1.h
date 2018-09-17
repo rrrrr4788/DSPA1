@@ -10,6 +10,7 @@ int getNextNum(string input);
 string getRest(string input, int size);
 bool isNumber(string str);
 string truncateIt(string str, int choice, int indexlength);
+string purifiCation(string str);
 
 struct node {
 	string name;
